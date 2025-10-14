@@ -1,1 +1,6 @@
 /enjarvis
+# Database file
+jarvis.db
+
+# User contacts
+contacts.csv

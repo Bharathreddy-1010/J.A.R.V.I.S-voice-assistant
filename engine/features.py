@@ -15,8 +15,7 @@ import time
 from playsound import playsound
 import requests
 
-ACCESS_KEY = "vvavSQfRjdqMsdFV9yDSXqrOSGh4AJbJApSLRe+dxeXD4PyjUWI6Zg=="
-
+ACCESS_KEY = "YOUR_PORCUPINE_ACCESS_KEY"
 from engine.command import *
 from engine.config import ASSISTANT_NAME
 import pywhatkit as kit
@@ -175,7 +174,7 @@ def sendMessageViaWeb(phone_number, message):
 import google.generativeai as genai
 
 # Configure the API key
-genai.configure(api_key="AIzaSyDHPb1MXFavN7mtxhF5zXpd5lGNa3Iup60")
+genai.configure(api_key="YOUR_GOOGLE_API_KEY")
 
 # Create the model instance
 model = genai.GenerativeModel(model_name="gemini-1.5-flash")
