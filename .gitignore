@@ -4,3 +4,5 @@ jarvis.db
 
 # User contacts
 contacts_1.csv
+
+.env

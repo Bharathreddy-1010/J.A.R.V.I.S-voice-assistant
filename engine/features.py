@@ -15,12 +15,14 @@ import time
 from playsound import playsound
 import requests
 
-ACCESS_KEY = "YOUR_PORCUPINE_ACCESS_KEY"
+ACCESS_KEY = "vvavSQfRjdqMsdFV9yDSXqrOSGh4AJbJApSLRe+dxeXD4PyjUWI6Zg=="
+
+
 from engine.command import *
 from engine.config import ASSISTANT_NAME
 import pywhatkit as kit
 import pvporcupine
-
+from groq import Groq
 from engine.helper import extract_yt_term, remove_words
 
 con = sqlite3.connect("jarvis.db")
@@ -171,29 +173,62 @@ def sendMessageViaWeb(phone_number, message):
     pyautogui.press("enter")
 
 
-import google.generativeai as genai
 
-# Configure the API key
-genai.configure(api_key="YOUR_GOOGLE_API_KEY")
+client = Groq(api_key="Enter your gorq key")
 
-# Create the model instance
-model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+
 
 def getGPTResponse(prompt):
+    prompt_lower = prompt.lower()
+
+    if any(x in prompt_lower for x in [
+        "who created you",
+        "who made you",
+        "who is your creator",
+        "who built you"
+    ]):
+        return "I was created by Bharath Kumar Reddy"
+
+    if any(x in prompt_lower for x in [
+        "who is your boss",
+        "who is your master",
+        "who controls you",
+        "who is your owner"
+    ]):
+        return "Bharath Kumar Reddy is my boss."
+
     try:
-        # Generate content with your updated config
-        response = model.generate_content(
-            prompt,
-            generation_config={
-                "temperature": 0.4,
-                "max_output_tokens": 120
-            }
+        completion = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",# or mixtral-8x7b-32768
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                         "You are Jarvis, an AI assistant. "
+                         "Give very short, direct answers. "
+                         "No explanations unless explicitly asked. "
+                         "Maximum 4 sentence."
+                         "If asked who created you, always reply: 'I was created by Bharath.'"
+                         "If asked who is your boss, always reply: 'I was created by Bharath.'"
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.4,
+            max_tokens=500
         )
-        return response.text
+
+        return completion.choices[0].message.content
+
     except Exception as e:
-        print("❌ Gemini API Error:", e)
+        print("❌ Groq API Error:", e)
         return "Sorry, I couldn't generate a response."
-    
+
+
+
 def getTime():
     now = datetime.datetime.now()
     current_time = now.strftime("%I:%M %p")
